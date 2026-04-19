@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tenki - Japan Weather Forecast</title>
+<meta name="description" content="Tenki - Get real-time weather updates for top cities in Japan and any city worldwide. Accurate temperature, conditions, and forecasts.">
+<meta name="keywords" content="Tenki, weather, Japan weather, Tokyo weather, Osaka weather, Kyoto weather, Sapporo weather, Fukuoka weather, real-time weather">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+body { display: flex; flex-direction: column; align-items: center; min-height: 100vh; color: #fff; background: linear-gradient(to right, #00c6ff, #0072ff); transition: background 0.5s; }
+header { text-align: center; padding: 2rem 1rem; }
+header h1 { font-size: 3rem; font-weight: 700; margin-bottom: 0.5rem; text-shadow: 1px 1px 4px rgba(0,0,0,0.3); }
+header p { font-size: 1.2rem; }
+.weather-search { display: flex; align-items: center; gap: 1rem; margin: 2rem 0; }
+.weather-search input { padding: 0.8rem 1rem; border-radius: 25px; border: none; width: 250px; font-size: 1rem; outline: none; }
+.weather-search button { padding: 0.8rem 2rem; border-radius: 25px; border: none; background-color: #fff; color: #0072ff; font-weight: 600; cursor: pointer; transition: 0.3s; font-size: 1rem; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+.weather-search button:hover { background-color: #e0e0e0; }
+.weather-result { background: rgba(255,255,255,0.1); border-radius: 20px; padding: 1.5rem; text-align: center; width: 200px; box-shadow: 0 8px 20px rgba(0,0,0,0.3); transition: transform 0.3s; }
+.weather-result:hover { transform: translateY(-5px); }
+.weather-result img { width: 80px; height: 80px; margin-bottom: 1rem; }
+.weather-result h2 { font-size: 1.2rem; margin-bottom: 0.5rem; }
+.weather-result p { font-size: 1rem; margin: 0.3rem 0; text-transform: capitalize; }
+.top-cities { display: flex; justify-content: center; gap: 2rem; margin-bottom: 2rem; }
+footer { margin-top: auto; padding: 1rem; text-align: center; font-size: 0.9rem; }
+</style>
+</head>
+<body>
+
+<header>
+    <h1>Tenki</h1>
+    <p>Professional Weather Updates for Top Japanese Cities</p>
+</header>
+
+<main>
+    <section class="weather-search">
+        <input type="text" id="cityInput" placeholder="Enter city name">
+        <button id="searchBtn">Get Weather</button>
+    </section>
+
+    <section class="weather-result" id="weatherCard">
+        <img id="weatherImg" src="" alt="Weather">
+        <h2 id="cityName">City Name</h2>
+        <p id="temperature">-- °C</p>
+        <p id="description">Weather Description</p>
+    </section>
+
+    <section>
+        <h2 style="text-align:center; margin:2rem 0;">Top Cities in Japan</h2>
+        <div class="top-cities" id="topCities">
+            <!-- Top cities weather cards will be injected here -->
+        </div>
+    </section>
+</main>
+
+<footer>
+    <p>Powered by Tenki | Free Weather API</p>
+</footer>
+
+<script>
+const apiKey = '7ff32ce7cc5837f3701339a9f1fed916';
+const searchBtn = document.getElementById('searchBtn');
+const cityInput = document.getElementById('cityInput');
+const cityName = document.getElementById('cityName');
+const temperature = document.getElementById('temperature');
+const description = document.getElementById('description');
+const weatherImg = document.getElementById('weatherImg');
+const body = document.body;
+const topCitiesContainer = document.getElementById('topCities');
+
+// Update weather card
+function updateWeatherCard(data, cardElements) {
+    const { cityNameElem, tempElem, descElem, imgElem } = cardElements;
+    cityNameElem.textContent = data.name;
+    tempElem.textContent = `${Math.round(data.main.temp)} °C`;
+    descElem.textContent = data.weather[0].description;
+    // Use OpenWeatherMap icon
+    const iconCode = data.weather[0].icon;
+    imgElem.src = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
+}
+
+// Search function
+searchBtn.addEventListener('click', () => {
+    const city = cityInput.value.trim();
+    if(!city) return alert('Please enter a city name');
+
+    fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&units=metric&appid=${apiKey}`)
+        .then(res => { if(!res.ok) throw new Error('City not found.'); return res.json(); })
+        .then(data => updateWeatherCard(data, {cityNameElem: cityName, tempElem: temperature, descElem: description, imgElem: weatherImg}))
+        .catch(err => { alert(err.message); });
+});
+
+// Load 4 top Japanese cities
+const topJapanCities = ['Tokyo','Osaka','Kyoto','Sapporo'];
+
+function loadTopCities(){
+    topJapanCities.forEach(city => {
+        const card = document.createElement('div');
+        card.classList.add('weather-result');
+        card.innerHTML = `<img src="" alt="Weather"><h2>${city}</h2><p>-- °C</p><p>Loading...</p>`;
+        topCitiesContainer.appendChild(card);
+
+        const imgElem = card.querySelector('img');
+        const tempElem = card.querySelector('p:nth-child(2)');
+        const descElem = card.querySelector('p:nth-child(3)');
+        const cityNameElem = card.querySelector('h2');
+
+        fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&units=metric&appid=${apiKey}`)
+        .then(res => res.json())
+        .then(data => updateWeatherCard(data, {cityNameElem, tempElem, descElem, imgElem}))
+        .catch(() => { tempElem.textContent='-- °C'; descElem.textContent='Error'; imgElem.src=''; });
+    });
+}
+
+// Load top cities on page load
+loadTopCities();
+</script>
+
+</body>
+</html>
