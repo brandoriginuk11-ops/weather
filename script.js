@@ -6,15 +6,12 @@ const countryEl = document.getElementById('country');
 const weatherForecastEl = document.getElementById('weather-forecast');
 const currentTempEl = document.getElementById('current-temp');
 
-const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-
-const API_KEY ='49cc8c821cd2aff9af04c9f98c36eb74';
+const API_KEY ='7ff32ce7cc5837f3701339a9f1fed916';
 
 let currentTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
 
-// LIVE CLOCK (auto timezone detect)
+// LIVE CLOCK
 setInterval(() => {
 
     const time = moment().tz(currentTimezone);
@@ -109,7 +106,7 @@ function showWeatherData(data){
             currentTempEl.innerHTML =
 
             `<img src="https://openweathermap.org/img/wn/${day.weather[0].icon}@4x.png"
-            alt="weather icon" class="w-icon">
+            class="w-icon">
 
             <div class="other">
 
