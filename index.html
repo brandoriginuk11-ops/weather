@@ -1,142 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tenki - Japan Weather Forecast</title>
-<meta name="description" content="Tenki - Real-time weather updates for top cities in Japan and worldwide.">
-<meta name="keywords" content="Tenki, weather, Japan weather, Tokyo weather, Osaka weather, Kyoto weather, Sapporo weather, real-time weather">
-<!-- Bootstrap CSS -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-<style>
-body {
-  background: linear-gradient(to right, #74ebd5, #ACB6E5);
-  color: #fff;
-  min-height: 100vh;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-header {
-  text-align: center;
-  padding: 2rem 0;
-}
-header h1 { font-size: 3rem; font-weight: 700; text-shadow: 1px 1px 4px rgba(0,0,0,0.3); }
-header p { font-size: 1.2rem; margin-top: 0.5rem; }
-.card {
-  background: rgba(255,255,255,0.15);
-  color: #fff;
-  border: none;
-  border-radius: 15px;
-  text-align: center;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  transition: transform 0.3s;
-}
-.card:hover { transform: translateY(-5px); }
-.card img { width: 80px; height: 80px; margin-bottom: 0.5rem; }
-</style>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Weather App</title>
 </head>
 <body>
+    
+    <div class="container">
+        <div class="current-info">
 
-<header>
-  <h1>Tenki</h1>
-  <p>Weather Updates for Top Japanese Cities</p>
-</header>
+            <div class="date-container">
+                <div class="time" id="time">
+                    12:30 <span id="am-pm">PM</span>
+                </div>
+                <div class="date" id="date">
+                    Monday, 25 May
+                </div>
 
-<main class="container">
-  <!-- Search -->
-  <div class="row justify-content-center mb-4">
-    <div class="col-md-4">
-      <div class="input-group">
-        <input type="text" id="cityInput" class="form-control" placeholder="Enter city name">
-        <button id="searchBtn" class="btn btn-primary">Get Weather</button>
-      </div>
+                <div class="others" id="current-weather-items">
+                    
+                    
+                </div>
+            </div>
+
+            <div class="place-container">
+                <div class="time-zone" id="time-zone">Asia/Kolkata</div>
+                <div id="country" class="country">IN</div>
+            </div>
+        </div>
+
+        
     </div>
-  </div>
 
-  <!-- Main Search Result -->
-  <div class="row justify-content-center mb-5">
-    <div class="col-md-4">
-      <div class="card" id="weatherCard">
-        <img id="weatherImg" src="" alt="Weather">
-        <h3 id="cityName">City Name</h3>
-        <p id="temperature">-- °C</p>
-        <p id="description">Weather Description</p>
-      </div>
+    <div class="future-forecast">
+        <div class="today" id="current-temp">
+            <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
+            <div class="other">
+                <div class="day">Monday</div>
+                <div class="temp">Night - 25.6&#176; C</div>
+                <div class="temp">Day - 35.6&#176; C</div>
+            </div>
+        </div>
+
+        <div class="weather-forecast" id="weather-forecast">
+            <div class="weather-forecast-item">
+                <div class="day">Tue</div>
+                <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
+                <div class="temp">Night - 25.6&#176; C</div>
+                <div class="temp">Day - 35.6&#176; C</div>
+            </div>
+            <div class="weather-forecast-item">
+                <div class="day">Wed</div>
+                <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
+                <div class="temp">Night - 25.6&#176; C</div>
+                <div class="temp">Day - 35.6&#176; C</div>
+            </div>
+            <div class="weather-forecast-item">
+                <div class="day">Thur</div>
+                <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
+                <div class="temp">Night - 25.6&#176; C</div>
+                <div class="temp">Day - 35.6&#176; C</div>
+            </div>
+            <div class="weather-forecast-item">
+                <div class="day">Fri</div>
+                <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
+                <div class="temp">Night - 25.6&#176; C</div>
+                <div class="temp">Day - 35.6&#176; C</div>
+            </div>
+            <div class="weather-forecast-item">
+                <div class="day">Sat</div>
+                <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
+                <div class="temp">Night - 25.6&#176; C</div>
+                <div class="temp">Day - 35.6&#176; C</div>
+            </div>
+
+        </div>
     </div>
-  </div>
 
-  <!-- Top Cities -->
-  <h2 class="text-center mb-4">Top Cities in Japan</h2>
-  <div class="row justify-content-center" id="topCities">
-    <!-- Cards will be injected here -->
-  </div>
-</main>
-
-<footer class="text-center mt-4 mb-3">
-  <p>Powered by Tenki | Free Weather API</p>
-</footer>
-
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-const apiKey = '7ff32ce7cc5837f3701339a9f1fed916';
-const searchBtn = document.getElementById('searchBtn');
-const cityInput = document.getElementById('cityInput');
-const cityName = document.getElementById('cityName');
-const temperature = document.getElementById('temperature');
-const description = document.getElementById('description');
-const weatherImg = document.getElementById('weatherImg');
-const topCitiesContainer = document.getElementById('topCities');
-
-const topJapanCities = ['Tokyo,JP','Osaka,JP','Kyoto,JP','Sapporo,JP'];
-
-// Update a weather card
-function updateWeatherCard(data, elements){
-  elements.cityName.textContent = data.name;
-  elements.temp.textContent = `${Math.round(data.main.temp)} °C`;
-  elements.desc.textContent = data.weather[0].description;
-  elements.img.src = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
-}
-
-// Main search
-searchBtn.addEventListener('click', () => {
-  const city = cityInput.value.trim();
-  if(!city) return alert('Please enter a city name');
-  fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&units=metric&appid=${apiKey}`)
-    .then(res => { if(!res.ok) throw new Error('City not found'); return res.json(); })
-    .then(data => updateWeatherCard(data, {cityName, temp: temperature, desc: description, img: weatherImg}))
-    .catch(err => alert(err.message));
-});
-
-// Load top 4 cities
-topJapanCities.forEach(city => {
-  const cityId = city.split(',')[0];
-  const col = document.createElement('div');
-  col.className = 'col-md-3';
-  col.innerHTML = `
-    <div class="card" id="card-${cityId}">
-      <img src="" alt="Weather" id="img-${cityId}">
-      <h5 id="name-${cityId}">${cityId}</h5>
-      <p id="temp-${cityId}">-- °C</p>
-      <p id="desc-${cityId}">Loading...</p>
-    </div>`;
-  topCitiesContainer.appendChild(col);
-
-  fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&units=metric&appid=${apiKey}`)
-    .then(res => res.json())
-    .then(data => {
-      updateWeatherCard(data, {
-        cityName: document.getElementById(`name-${cityId}`),
-        temp: document.getElementById(`temp-${cityId}`),
-        desc: document.getElementById(`desc-${cityId}`),
-        img: document.getElementById(`img-${cityId}`)
-      });
-    })
-    .catch(() => {
-      document.getElementById(`desc-${cityId}`).textContent = 'Error';
-    });
-});
-</script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+    <script src="script.js"></script>
 </body>
 </html>
