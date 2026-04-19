@@ -14,22 +14,15 @@ body {
   flex-direction: column;
   align-items: center;
   min-height: 100vh;
-  transition: background 1s;
+  background: linear-gradient(to right, #87CEFA, #4682B4); /* Fixed natural background */
   color: #fff;
 }
 header {
   text-align: center;
   padding: 2rem;
 }
-header h1 {
-  font-size: 3rem;
-  font-weight: 700;
-  text-shadow: 1px 1px 4px rgba(0,0,0,0.3);
-}
-header p {
-  font-size: 1.2rem;
-  margin-top: 0.5rem;
-}
+header h1 { font-size: 3rem; font-weight: 700; text-shadow: 1px 1px 4px rgba(0,0,0,0.3); }
+header p { font-size: 1.2rem; margin-top: 0.5rem; }
 .weather-search {
   display: flex;
   align-items: center;
@@ -66,11 +59,7 @@ header p {
   transition: transform 0.3s;
 }
 .weather-result:hover { transform: translateY(-5px); }
-.weather-result img {
-  width: 80px;
-  height: 80px;
-  margin-bottom: 1rem;
-}
+.weather-result img { width: 80px; height: 80px; margin-bottom: 1rem; }
 .weather-result h2 { font-size: 1.2rem; margin-bottom: 0.5rem; }
 .weather-result p { font-size: 1rem; margin: 0.3rem 0; text-transform: capitalize; }
 .top-cities {
@@ -121,47 +110,35 @@ const temperature = document.getElementById('temperature');
 const description = document.getElementById('description');
 const weatherImg = document.getElementById('weatherImg');
 const topCitiesContainer = document.getElementById('topCities');
-const body = document.body;
 
 const topJapanCities = ['Tokyo,JP','Osaka,JP','Kyoto,JP','Sapporo,JP'];
 
-// Map weather types to gradient backgrounds
-function getBackground(weather){
-  weather = weather.toLowerCase();
-  if(weather.includes('clear')) return 'linear-gradient(to right, #fbc2eb, #a6c1ee)';
-  if(weather.includes('cloud')) return 'linear-gradient(to right, #bdc3c7, #2c3e50)';
-  if(weather.includes('rain') || weather.includes('drizzle')) return 'linear-gradient(to right, #4b79a1, #283e51)';
-  if(weather.includes('snow')) return 'linear-gradient(to right, #e6dada, #274046)';
-  if(weather.includes('night')) return 'linear-gradient(to right, #232526, #414345)';
-  return 'linear-gradient(to right, #00c6ff, #0072ff)'; // default
-}
-
-// Update weather card
-function updateWeatherCard(data, cardElements, updateBackground=false){
+// Update a weather card
+function updateWeatherCard(data, cardElements){
   const { cityNameElem, tempElem, descElem, imgElem } = cardElements;
   cityNameElem.textContent = data.name;
   tempElem.textContent = `${Math.round(data.main.temp)} °C`;
   descElem.textContent = data.weather[0].description;
   const iconCode = data.weather[0].icon;
   imgElem.src = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
-  if(updateBackground) body.style.background = getBackground(data.weather[0].main);
 }
 
-// Search function
+// Search main city
 searchBtn.addEventListener('click', () => {
   const city = cityInput.value.trim();
   if(!city) return alert('Please enter a city name');
+
   fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&units=metric&appid=${apiKey}`)
     .then(res => { if(!res.ok) throw new Error('City not found.'); return res.json(); })
-    .then(data => updateWeatherCard(data, {cityNameElem: cityName, tempElem: temperature, descElem: description, imgElem: weatherImg}, true))
+    .then(data => updateWeatherCard(data, {cityNameElem: cityName, tempElem: temperature, descElem: description, imgElem: weatherImg}))
     .catch(err => alert(err.message));
 });
 
-// Load top 4 cities
+// Load top 4 cities reliably
 function loadTopCities(){
   topJapanCities.forEach(city => {
     const card = document.createElement('div');
-    card.classList.add('weather-result');
+    card.className = 'weather-result';
     card.innerHTML = `<img src="" alt="Weather"><h2>${city.split(',')[0]}</h2><p>-- °C</p><p>Loading...</p>`;
     topCitiesContainer.appendChild(card);
 
@@ -173,10 +150,15 @@ function loadTopCities(){
     fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&units=metric&appid=${apiKey}`)
       .then(res => res.json())
       .then(data => updateWeatherCard(data, {cityNameElem, tempElem, descElem, imgElem}))
-      .catch(() => { tempElem.textContent='-- °C'; descElem.textContent='Error'; imgElem.src=''; });
+      .catch(() => {
+        tempElem.textContent = '-- °C';
+        descElem.textContent = 'Error';
+        imgElem.src = '';
+      });
   });
 }
 
+// Call on page load
 loadTopCities();
 </script>
 </body>
